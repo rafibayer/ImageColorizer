@@ -19,3 +19,10 @@ To counteract this, I implemented a set of methods to splice the images into N s
 The only downside of this method is that images must be square, and their dimensions must be a multiple of 256.  
 In my tests, I have found that adding whitespace as padding and then cropping the image can help with images that don't have a 1:1 aspect ratio,  
 and it is often possible to stretch or compress images to a near power of 2, for example (500x500) -> (512x512) with minimal detail loss.  
+## Sample Outputs
+
+| Original | Output |
+| --- | --- |
+| <img src="/images/nyc.jpg?raw=true" height="512" width="512"> | <img src="/output/nyc_color.jpg?raw=true" height="512" width="512"> |
+|<img src="/images/seattle.jpg?raw=true" height="512" width="512"> | <img src="/output/seattle_color.jpg?raw=true" height="512" width="512">|
+|<img src="/images/dday.jpeg?raw=true" height="512" width="512"> | <img src="/output/dday_color.jpg?raw=true" height="512" width="512">|
