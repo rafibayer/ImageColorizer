@@ -9,14 +9,17 @@ import os
 
 import matplotlib.pyplot as plt
 
-
+# size of image for display purposes
 IMAGE_SIZE = 512
 
+# predictor class to colorize object
 pred = Predictor()
 
+# global variables to keep refrence for canvas images
 originalImage = None
 colorImage = None
 
+# holds the output of a colorization so it can be saved later
 outputArray = None
 
 root = Tk()
@@ -28,11 +31,13 @@ controls.grid(row=0, column=0, sticky=NW)
 
 Label(controls, text="Options:").grid(row=0, column=0, sticky=W)
 
+# resolution controls
 Label(controls, text="Target Resolution:").grid(row=1, column=0, sticky=W)
 resolutionEntry = Entry(controls)
 resolutionEntry.insert(END, "512")
 resolutionEntry.grid(row=1, column=1, sticky=W)
 
+# opening and saving images
 chooseButton = Button(controls, text="Choose Image")
 chooseButton.grid(row=2, column=0, sticky=W)
 
@@ -56,12 +61,15 @@ colorImageLabel.grid(row = 1, column = 1)
 
 ################## BUTTONS & BINDINGS #########################
 
+# updates the canvas image, called when global variable containing the PhotoImage is changed
 def updateOriginalImage():
     originalImageLabel.configure(image = originalImage)
 
+# same as above but for the colorized image
 def updateColorImage():
     colorImageLabel.configure(image = colorImage)
 
+# use the predictor to colorize an input image, update canvas images
 def predict_image(image_path, size):
     global originalImage
     global colorImage
@@ -75,11 +83,13 @@ def predict_image(image_path, size):
     rescale = result * 255
     colorImage = ImageTk.PhotoImage(Image.fromarray(np.uint8(rescale)).resize((IMAGE_SIZE, IMAGE_SIZE)))
     updateColorImage()
-    
+
+# open file dialogue
 def chooseImageButton(event):
     image_path = askopenfilename(title = "Select file", filetypes = [("jpeg files","*.jpg")])
     predict_image(image_path, getResolution())
 
+# save file dialogue
 def saveImageButton(event):
     f = asksaveasfile(mode='w', defaultextension=".jpg")
     if f is None:
@@ -88,9 +98,13 @@ def saveImageButton(event):
     im = Image.fromarray(np.uint8(outputArray*255))
     im.save(f)
 
+
 def getResolution():
     return int(resolutionEntry.get())
 
+# bindings
 chooseButton.bind("<Button-1>", chooseImageButton)
 saveButton.bind("<Button-1>", saveImageButton)
+
+
 root.mainloop()
