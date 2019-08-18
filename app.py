@@ -56,7 +56,6 @@ colorImageLabel.grid(row = 1, column = 1)
 
 ################## BUTTONS & BINDINGS #########################
 
-
 def updateOriginalImage():
     originalImageLabel.configure(image = originalImage)
 
