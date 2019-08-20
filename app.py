@@ -6,6 +6,7 @@ import numpy as np
 from tensorflow.keras.preprocessing.image import img_to_array, load_img
 from predictor import Predictor
 import os
+import math
 
 import matplotlib.pyplot as plt
 
@@ -32,17 +33,25 @@ controls.grid(row=0, column=0, sticky=NW)
 Label(controls, text="Options:").grid(row=0, column=0, sticky=W)
 
 # resolution controls
-Label(controls, text="Target Resolution:").grid(row=1, column=0, sticky=W)
-resolutionEntry = Entry(controls)
-resolutionEntry.insert(END, "512")
-resolutionEntry.grid(row=1, column=1, sticky=W)
+Label(controls, text="Target Width:").grid(row=1, column=0, sticky=W)
+widthEntry = Entry(controls)
+widthEntry.insert(END, "512")
+widthEntry.grid(row=1, column=1, sticky=W)
+
+Label(controls, text="Target height:").grid(row=2, column=0, sticky=W)
+heightEntry = Entry(controls)
+heightEntry.insert(END, "512")
+heightEntry.grid(row=2, column=1, sticky=W)
+
+
+
 
 # opening and saving images
 chooseButton = Button(controls, text="Choose Image")
-chooseButton.grid(row=2, column=0, sticky=W)
+chooseButton.grid(row=5, column=0, sticky=W)
 
 saveButton = Button(controls, text="Save Image")
-saveButton.grid(row=2, column=1, sticky=W)
+saveButton.grid(row=5, column=1, sticky=W)
 
 ################## IMAGES #########################
 
@@ -70,24 +79,28 @@ def updateColorImage():
     colorImageLabel.configure(image = colorImage)
 
 # use the predictor to colorize an input image, update canvas images
-def predict_image(image_path, size):
+def predict_image(image_path, size, original_res):
     global originalImage
     global colorImage
-    originalImage = ImageTk.PhotoImage(load_img(image_path, target_size = (IMAGE_SIZE, IMAGE_SIZE)))
+    originalImage = ImageTk.PhotoImage(load_img(image_path).resize(size))
     updateOriginalImage()
 
-    result = pred.colorizeImg(image_path, size)
+    result = pred.colorizeImg(image_path, original_res)
     global outputArray
     outputArray = result
 
     rescale = result * 255
-    colorImage = ImageTk.PhotoImage(Image.fromarray(np.uint8(rescale)).resize((IMAGE_SIZE, IMAGE_SIZE)))
+    colorImage = ImageTk.PhotoImage(Image.fromarray(np.uint8(rescale)).resize(size))
     updateColorImage()
 
 # open file dialogue
 def chooseImageButton(event):
-    image_path = askopenfilename(title = "Select file", filetypes = [("jpeg files","*.jpg")])
-    predict_image(image_path, getResolution())
+    image_path = askopenfilename(title = "Select file", filetypes = [("jpeg files","*.jpg *.jpeg")])
+    if image_path is None:
+        return
+    flip_size = Image.open(image_path).size
+    size = (flip_size[1], flip_size[0])
+    predict_image(image_path, getResolution(), size) # ADD ORIGINAL RESOLUTION
 
 # save file dialogue
 def saveImageButton(event):
@@ -100,11 +113,13 @@ def saveImageButton(event):
 
 
 def getResolution():
-    return int(resolutionEntry.get())
+    return (int(widthEntry.get()), int(heightEntry.get()))
 
 # bindings
 chooseButton.bind("<Button-1>", chooseImageButton)
 saveButton.bind("<Button-1>", saveImageButton)
+
+################## HELPER FUNCTIONS #########################
 
 
 root.mainloop()

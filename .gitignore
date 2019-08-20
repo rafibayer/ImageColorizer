@@ -4,6 +4,7 @@ out
 node_modules
 *.pyc
 *.vsix
+test.py
 **/.vscode/.ropeproject/**
 **/testFiles/**/.cache/**
 *.noseids

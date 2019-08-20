@@ -4,6 +4,7 @@ from skimage.color import lab2rgb, rgb2lab
 import numpy as np
 import matplotlib.pyplot as plt
 import math
+from PIL import Image
 
 class Predictor:
   
@@ -83,8 +84,28 @@ class Predictor:
     return result
 
   # single function that takes in an image path and size, and returns a colorized image
-  def colorizeImg(self, path, img_size):
-      image = self.load_lab_bw(path, (img_size,img_size))
-      bw_chunks = self.splice_square_image(image, img_size, 256)
+  def colorizeImg(self, path, original_res):
+
+      image = self.load_lab_bw(path, (original_res[0], original_res[1]))
+
+
+      nearest = self.nearestSquareResolution(original_res)
+      square_img = Image.new("L", (nearest, nearest), "white")
+      image = Image.fromarray(np.uint8(image * 255), "L")
+
+      square_img.paste(image)
+      square_img = np.asarray(square_img) / 255.
+      bw_chunks = self.splice_square_image(square_img, nearest, 256)
       pred = self.predict_color(bw_chunks)
-      return self.reconstruct_img(img_size, 256, bw_chunks, pred)
+      reconstructed = self.reconstruct_img(nearest, 256, bw_chunks, pred)
+      crop = reconstructed[:original_res[0], :original_res[1]]
+
+
+      return crop
+
+  def nextPowOf2(self, n):
+      return int(math.pow(2, math.ceil(math.log(n, 2))))
+
+
+  def nearestSquareResolution(self, shape):
+      return self.nextPowOf2(max(shape[0], shape[1]))

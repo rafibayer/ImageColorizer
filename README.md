@@ -25,3 +25,7 @@ and it is often possible to stretch or compress images to a near power of 2, for
 | <img src="/images/nyc.jpg?raw=true" height="512" width="512"> | <img src="/output/nyc_color.jpg?raw=true" height="512" width="512"> |
 |<img src="/images/seattle.jpg?raw=true" height="512" width="512"> | <img src="/output/seattle_color.jpg?raw=true" height="512" width="512">|
 |<img src="/images/dday.jpeg?raw=true" height="512" width="512"> | <img src="/output/dday_color.jpg?raw=true" height="512" width="512">|
+
+## Next Steps
+The biggest improvement to this project would likely come from just training a better network. The sample data I used was limited to landscape and cityscape photos taken from an IBM image classification dataset, this means the colorizer will likely produce poor results for anything outside of this image category. I tried a couple tests with things like faces and animals and most of the results weren't even close.   
+Finding a more balanced dataset and training the network on that would help the network accurately colorize more images.
