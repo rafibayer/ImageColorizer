@@ -63,6 +63,7 @@ originalImage = ImageTk.PhotoImage(load_img("blank.jpg", target_size = (IMAGE_SI
 originalImageLabel = Label(images, image = originalImage)
 originalImageLabel.grid(row=1, column = 0)
 
+
 Label(images, text="Colorized").grid(row=0, column=1, sticky=W)
 colorImage = ImageTk.PhotoImage(load_img("blank.jpg", target_size = (IMAGE_SIZE, IMAGE_SIZE)))
 colorImageLabel = Label(images, image = colorImage)
