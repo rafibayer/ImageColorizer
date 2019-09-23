@@ -17,7 +17,6 @@ class Predictor:
     self.model.load_weights('model.h5')
 
 
-
   # load the l component of an image (LAB colorspace)
   def load_lab_bw(self, path, size):
     image = img_to_array(load_img(path, target_size=size)) / 255 #open image as array and normalize values [0, 1]
